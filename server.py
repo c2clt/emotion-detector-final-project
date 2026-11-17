@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-import json
+
 from EmotionDetection.emotion_detection import emotion_detector
 
 app = Flask(__name__)
@@ -14,8 +14,10 @@ def emo_detector():
     text_to_analyze = request.args.get('textToAnalyze')
     # Pass the text to the emotion_detector function and store the response
     response = emotion_detector(text_to_analyze)
-
-    return json.dumps(response, indent=4)
+    if response['dominant_emotion'] == None:
+        return "Invalid text! Please try again!"
+    else:
+        return response
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
